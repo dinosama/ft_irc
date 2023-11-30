@@ -6,15 +6,15 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:24:17 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/11/26 10:26:22 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/11/30 04:19:32 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcUser.hpp"
 
 IrcUser::IrcUser(int userfd) : userfd(userfd) {
-    /*pollfd::fd = userfd;
-    pollfd::events = POLLIN;*/
+    clearBuf();
+	clearBuf();
 }
 
 IrcUser::~IrcUser() {
@@ -28,6 +28,11 @@ char    *IrcUser::getBuf()
 char    *IrcUser::getMsg()
 {
     return (msg);
+}
+
+int		IrcUser::getFd()
+{
+	return (userfd);
 }
 
 void    IrcUser::clearBuf()
@@ -60,7 +65,7 @@ int     IrcUser::buftomsg()
     clearMsg();
     for (int i = 0; i < 512; i++)
     {
-        if (buf[i] == '\n')
+        if (buf[i] == '\n' && buf[i - 1] == '\r')
         {
             strncpy(msg, buf, i + 1);
             l = ft_strlen(buf + i + 1, i);

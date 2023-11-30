@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/11/26 10:23:25 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/11/30 03:28:26 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,11 +151,6 @@ int		IrcServ::run()
 						if (userdb[i].buftomsg())
 						{
 							std::cout << userdb[i].getMsg() << std::endl;
-							for (int l = 1; l < (int)userdb.size(); l++)
-							{
-								if (l != i)
-									send(pfds[l].fd, userdb[i].getMsg(), 512, 0);
-							}
 						}
 					}
 				}

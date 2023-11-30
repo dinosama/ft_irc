@@ -1,34 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IrcUser.hpp                                        :+:      :+:    :+:   */
+/*   Token.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/24 11:01:30 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/11/30 02:47:16 by aaapatou         ###   ########.fr       */
+/*   Created: 2023/11/30 01:04:58 by aaapatou          #+#    #+#             */
+/*   Updated: 2023/11/30 04:37:59 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <poll.h>
-#include <unistd.h>
-#include <string.h>
 #include <iostream>
+#include <vector>
 
-class IrcUser
+class Token
 {
-    private:
-        int     userfd;
-        char    buf[512];
-        char    msg[512];
-    public:
-        IrcUser(int userfd);
-        ~IrcUser();
-        char    *getBuf();
-        char    *getMsg();
-		int		getFd();
-        void    clearBuf();
-        void    clearMsg();
-        int     buftomsg();
-        void    buffing(char *s);
+	private:
+	public:
+	Token(std::string &msg);
+	~Token();
+	std::string	command;
+	std::vector<std::string> parameters;
 };
