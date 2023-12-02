@@ -6,9 +6,12 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:27 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/11/26 08:47:25 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/02 02:35:57 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef IRCSERV_HPP
+#define IRCSERV_HPP
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -23,18 +26,25 @@
 #include <stdlib.h>
 #include <cerrno>
 #include <fcntl.h>
+#include "Token.hpp"
+#include "IrcChannel.hpp"
 
 class IrcServ
 {
     private:
         int                             sockfd;
         int                             error;
-        std::vector<IrcUser>            userdb;
+        std::string                     pwd;
+        std::vector<IrcUser>            users;
         std::vector<pollfd>             pfds;
+        std::vector<IrcChannel>         channels;
     public:
-        IrcServ();
+        IrcServ(std::string port, std::string pwd);
         ~IrcServ();
         void    add_user(int userfd);
         void    delete_user(int userfd);
         int     run();
+        void    exec(Token *tok, IrcUser user);
 };
+
+#endif

@@ -6,14 +6,14 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:24:17 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/11/30 04:19:32 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:27:17 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcUser.hpp"
 
 IrcUser::IrcUser(int userfd) : userfd(userfd) {
-    clearBuf();
+    clearMsg();
 	clearBuf();
 }
 
@@ -69,7 +69,7 @@ int     IrcUser::buftomsg()
         {
             strncpy(msg, buf, i + 1);
             l = ft_strlen(buf + i + 1, i);
-            strncpy(buf, buf + i, l);
+            strncpy(buf, buf + i + 1, l);
             while (l < 512)
             {
                 buf[l] = 0;
