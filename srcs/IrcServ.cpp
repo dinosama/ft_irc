@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/02 03:02:39 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/02 03:11:39 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,9 @@ int		command_is(Token *tok, const char *cmd)
 	return (0);
 }
 
-void	IrcServ::exec(Token *tok, IrcUser user)
+void	IrcServ::exec(Token *tok, IrcUser user) //execute la fonction qui correspond à la commande reçu
 {
-	user.getFd();
+	user.getFd();							//↓↓↓↓↓ tu dois lancer tes fonctions ici ↓↓↓↓↓
 	if (tok->command.compare("NICK") == 0) {std::cout << "executing NICK" << std::endl; return ;}
 	if (tok->command.compare("USER") == 0) {std::cout << "executing USER" << std::endl; return ;}
 	if (tok->command.compare("JOIN") == 0) {std::cout << "executing JOIN" << std::endl; return ;}
