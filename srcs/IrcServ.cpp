@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/02 03:11:39 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/06 04:56:25 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	IrcServ::add_user(int userfd)
 	struct pollfd pfd;
 	pfd.fd = userfd;
 	pfd.events = POLLIN;
+	pfd.revents = 0;
 	users.push_back(IrcUser(userfd));
 	pfds.push_back(pfd);
 }
@@ -101,22 +102,23 @@ void *get_in_addr(struct sockaddr *sa)
 
 int		command_is(Token *tok, const char *cmd)
 {
-	if (tok->command.compare(cmd) == 0)
+	if (tok->getCommand().compare(cmd) == 0)
 		return (1);
 	return (0);
 }
 
-void	IrcServ::exec(Token *tok, IrcUser user) //execute la fonction qui correspond à la commande reçu
+void	IrcServ::exec(Token *tok, IrcUser user)
 {
-	user.getFd();							//↓↓↓↓↓ tu dois lancer tes fonctions ici ↓↓↓↓↓
-	if (tok->command.compare("NICK") == 0) {std::cout << "executing NICK" << std::endl; return ;}
-	if (tok->command.compare("USER") == 0) {std::cout << "executing USER" << std::endl; return ;}
-	if (tok->command.compare("JOIN") == 0) {std::cout << "executing JOIN" << std::endl; return ;}
-	if (tok->command.compare("KICK") == 0) {std::cout << "executing KICK" << std::endl; return ;}
-	if (tok->command.compare("INVITE") == 0) {std::cout << "executing INVITE" << std::endl; return ;}
-	if (tok->command.compare("TOPIC") == 0) {std::cout << "executing TOPIC" << std::endl; return ;}
-	if (tok->command.compare("MODE") == 0) {std::cout << "executing MODE" << std::endl; return ;}
-	std::cout << "ignoring command " << tok->command << std::endl << std::endl;
+	std::string		command = tok->getCommand();
+	user.getFd();
+	if (command.compare("NICK") == 0) {std::cout << "executing NICK" << std::endl; return ;}
+	if (command.compare("USER") == 0) {std::cout << "executing USER" << std::endl; return ;}
+	if (command.compare("JOIN") == 0) {std::cout << "executing JOIN" << std::endl; return ;}
+	if (command.compare("KICK") == 0) {std::cout << "executing KICK" << std::endl; return ;}
+	if (command.compare("INVITE") == 0) {std::cout << "executing INVITE" << std::endl; return ;}
+	if (command.compare("TOPIC") == 0) {std::cout << "executing TOPIC" << std::endl; return ;}
+	if (command.compare("MODE") == 0) {std::cout << "executing MODE" << std::endl; return ;}
+	std::cout << "ignoring command " << command << std::endl << std::endl;
 	return ;
 }
 
@@ -130,6 +132,7 @@ int		IrcServ::run()
 	int						bufsize = sizeof buf;
 	Token					*tok;
 
+	newfd = -1;
 	if ((status = listen(sockfd, 10)) == -1) {
 		std::cerr << "error: listen " << errno << std::endl;
 		return (-1);
@@ -173,9 +176,9 @@ int		IrcServ::run()
 						while (users[i].buftomsg())
 						{
 							tok = new Token(users[i].getMsg());
-							std::cout << "command: " << tok->command << std::endl;
-							for (int i = 0; i < (int)tok->parameters.size(); i++)
-								std::cout << "parameter " << i + 1 << ": " << tok->parameters[i] << std::endl;
+							std::cout << "command: " << tok->getCommand() << std::endl;
+							for (int i = 0; i < (int)tok->getNparam(); i++)
+								std::cout << "parameter " << i + 1 << ": " << (*tok->getParam())[i] << std::endl;
 							exec(tok, users[i]);
 							std::cout << std::endl;
 							delete tok;

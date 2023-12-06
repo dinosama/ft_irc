@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 04:30:53 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/11/30 16:33:14 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/06 03:28:10 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,3 +44,23 @@ Token::Token(char *cmsg) : msg(cmsg)
 }
 
 Token::~Token() {}
+
+std::string		Token::getCommand() const
+{
+	return (command);
+}
+
+std::string		Token::getMsg() const
+{
+	return (msg);
+}
+
+std::vector<std::string>	*Token::getParam()
+{
+	return (&parameters);
+}
+
+int							Token::getNparam() const
+{
+	return (nparam);
+}

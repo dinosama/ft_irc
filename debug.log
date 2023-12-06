@@ -1,9 +1,3 @@
 << CAP LS
-<< NICK dino
-<< USER dino dino localhost :aaa
-<< CAP LS
-<< NICK dino
-<< USER dino dino localhost :aaa
-<< CAP LS
-<< NICK dino
-<< USER dino dino localhost :dino
+<< NICK aaapatou
+<< USER aaa aaa localhost :Aaron APATOUT
