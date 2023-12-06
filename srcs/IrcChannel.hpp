@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcChannel.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:39:52 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/02 02:29:00 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/06 05:20:52 by motaouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ class IrcChannel
         bool            getInvite() const;
         void            setTopicPerm(bool topic);
         bool            getTopicPerm() const;
+        int             is_ops(std::string  nick);
+        int             is_user(std::string user);
 };
 
 #endif

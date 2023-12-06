@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServ.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:27 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/02 02:35:57 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/06 05:13:59 by motaouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <fcntl.h>
 #include "Token.hpp"
 #include "IrcChannel.hpp"
+#include "algorithm"
 
 class IrcServ
 {
@@ -45,6 +46,10 @@ class IrcServ
         void    delete_user(int userfd);
         int     run();
         void    exec(Token *tok, IrcUser user);
+        int     used_nickname(std::string str);
+        IrcChannel     *is_channel(std::string channel);
+        std::string kick(Token *t, IrcUser &user);
+        
 };
 
 #endif

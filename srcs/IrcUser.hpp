@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcUser.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:01:30 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/02 02:27:19 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/06 21:36:09 by motaouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ class IrcUser
         char    *getBuf();
         char    *getMsg();
 		int		getFd();
+        std::string getNick();
+        std::string getName();
         void    clearBuf();
         void    clearMsg();
         int     buftomsg();
