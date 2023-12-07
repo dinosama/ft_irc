@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/06 04:56:25 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/07 05:01:10 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,11 @@ int		command_is(Token *tok, const char *cmd)
 	return (0);
 }
 
-void	IrcServ::exec(Token *tok, IrcUser user)
+void	IrcServ::exec(Token *tok, IrcUser &user)
 {
 	std::string		command = tok->getCommand();
 	user.getFd();
-	if (command.compare("NICK") == 0) {std::cout << "executing NICK" << std::endl; return ;}
+	if (command.compare("NICK") == 0) {nickname(tok, user, *this); return ;}
 	if (command.compare("USER") == 0) {std::cout << "executing USER" << std::endl; return ;}
 	if (command.compare("JOIN") == 0) {std::cout << "executing JOIN" << std::endl; return ;}
 	if (command.compare("KICK") == 0) {std::cout << "executing KICK" << std::endl; return ;}
@@ -137,7 +137,7 @@ int		IrcServ::run()
 		std::cerr << "error: listen " << errno << std::endl;
 		return (-1);
 	}
-	while (1) {
+	while (power) {
 		if ((status = poll(pfds.data(), users.size(), -1)) == -1) {
 			std::cerr << "error: poll " << status << std::endl;
 			return (-1);
@@ -188,4 +188,5 @@ int		IrcServ::run()
 			}
 		}
 	}
+	return (1);
 }

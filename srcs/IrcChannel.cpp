@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:52:56 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/02 02:29:41 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/06 23:38:24 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,14 @@ void            IrcChannel::setTopicPerm(bool topic)
 bool            IrcChannel::getTopicPerm() const
 {
     return (topic);
+}
+
+std::vector<IrcUser>	*IrcChannel::getUsers()
+{
+	return (&users);
+}
+
+std::vector<IrcUser>	*IrcChannel::getOps()
+{
+	return (&ops);
 }

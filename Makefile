@@ -1,6 +1,6 @@
 NAME = ircserv
 
-SRCS = srcs/main.cpp srcs/IrcServ.cpp srcs/IrcUser.cpp srcs/Token.cpp srcs/IrcChannel.cpp
+SRCS = srcs/main.cpp srcs/IrcServ.cpp srcs/IrcUser.cpp srcs/Token.cpp srcs/IrcChannel.cpp srcs/display_cmds.cpp
 
 OBJ_DIR	= objs/
 

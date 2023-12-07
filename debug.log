@@ -1,3 +1,12 @@
 << CAP LS
 << NICK aaapatou
 << USER aaa aaa localhost :Aaron APATOUT
+>> :!@localhost NICK aaapatou
+<< CAP LS
+<< NICK aaapatou
+<< USER aaa aaa localhost :Aaron APATOUT
+>> :!@localhost NICK aaapatou
+<< CAP LS
+<< NICK aaapatou
+<< USER aaa aaa localhost :Aaron APATOUT
+>> :!@localhost NICK aaapatou

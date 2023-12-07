@@ -6,13 +6,14 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:24:17 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/06 04:47:04 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/07 03:18:05 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcUser.hpp"
 
 IrcUser::IrcUser(int userfd) : userfd(userfd) {
+	registered = 0;
     clearMsg();
 	clearBuf();
 }
@@ -86,4 +87,39 @@ int     IrcUser::buftomsg()
         }
     }
     return (0);
+}
+
+void	IrcUser::setNick(std::string nick)
+{
+	this->nick = nick;
+}
+
+void	IrcUser::setName(std::string name)
+{
+	this->name = name;
+}
+
+void	IrcUser::setReal(std::string real)
+{
+	this->real_name = real;
+}
+
+void	IrcUser::setReg(int reg)
+{
+	registered = reg;
+}
+
+int		IrcUser::getReg()
+{
+	return (registered);
+}
+
+std::string IrcUser::getNick()
+{
+	return (nick);
+}
+
+std::string IrcUser::getName()
+{
+	return (name);
 }
