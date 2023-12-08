@@ -6,7 +6,7 @@
 /*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:27 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/07 04:59:49 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/08 23:20:39 by motaouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ class IrcServ
         void		kick(Token *t, IrcUser &user);
 		void		nickname(Token *t, IrcUser &user, IrcServ &serv);
 		int			find_userfd(std::string nick);
+        void        invite(Token *t, IrcUser &user);
+        void        topic(Token *t, IrcUser &user);
 };
 
 #endif

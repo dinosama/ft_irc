@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display_cmds.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 00:34:20 by motaouss          #+#    #+#             */
-/*   Updated: 2023/12/07 04:22:23 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/08 23:31:01 by motaouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,3 +170,39 @@ void	user_cmd(Token *t, IrcUser &user){
 		user.setReg(1);
 	}
 }
+
+
+void	IrcServ::invite(Token *t, IrcUser &user){
+	if (t->getNparam() < 2)
+		send_one(ERR_NEEDMOREPARAMS(user.getNick(), t->getCommand()), user);
+	else if (is_channel((*t->getParam())[1]) == NULL)
+		send_one(ERR_NOSUCHCHANNEL(user.getNick(), (*t->getParam())[1]), user);
+	else if (is_channel((*t->getParam())[1])->is_user(user.getNick()))
+		send_one(ERR_NOTONCHANNEL(user.getNick(), (*t->getParam())[1]), user);
+	else if (is_channel((*t->getParam())[1])->is_ops(user.getNick()))
+		send_one(ERR_CHANOPRIVSNEEDED(user.getNick(), (*t->getParam())[1]), user);
+	else if (is_channel((*t->getParam())[1])->is_user((*t->getParam())[0]))
+		send_one(ERR_USERONCHANNEL(user.getNick(), (*t->getParam())[0], (*t->getParam())[1]), user);
+	else{
+		//prout caca caca prout
+	}
+}
+
+
+void	IrcServ::topic(Token *t, IrcUser &user){
+	if (t->getNparam() < 1)
+		send_one(ERR_NEEDMOREPARAMS(user.getNick(), t->getCommand()), user);
+	else if (is_channel((*t->getParam())[0]) == NULL)
+		send_one(ERR_NOSUCHCHANNEL(user.getNick(), (*t->getParam())[0]), user);
+	else if (is_channel((*t->getParam())[0])->is_user(user.getNick()))
+		send_one(ERR_NOTONCHANNEL(user.getNick(), (*t->getParam())[0]), user);
+	else if (is_channel((*t->getParam())[0])->is_ops(user.getNick()))
+		send_one(ERR_CHANOPRIVSNEEDED(user.getNick(), (*t->getParam())[0]), user);
+	else{
+		if (t->getNparam() >= 2)
+			send_one(RPL_NOTOPIC(user.getNick(), (*t->getParam())[0]), user);
+		else if (is_channel((*t->getParam())[1]) == NULL)
+			send_channel(RPL_TOPIC(user.getNick(), (*t->getParam())[0], (*t->getParam())[1] ), *is_channel((*t->getParam())[0]));
+	}
+}
+
