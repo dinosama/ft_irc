@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServ.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:27 by aaapatou          #+#    #+#             */
 /*   Updated: 2023/12/07 04:59:49 by aaapatou         ###   ########.fr       */
@@ -29,7 +29,6 @@
 #include "Token.hpp"
 #include "IrcChannel.hpp"
 #include "algorithm"
-
 extern bool power;
 
 class IrcServ

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   IrcUser.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:24:17 by aaapatou          #+#    #+#             */
 /*   Updated: 2023/12/07 03:18:05 by aaapatou         ###   ########.fr       */
@@ -35,6 +35,10 @@ int		IrcUser::getFd()
 {
 	return (userfd);
 }
+
+std::string IrcUser::getNick(){ return (nick); }
+
+std::string IrcUser::getName(){ return (name); }
 
 void    IrcUser::clearBuf()
 {
