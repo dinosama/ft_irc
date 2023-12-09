@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 17:17:20 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 21:11:12 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,18 +150,18 @@ void	IrcServ::exec(Token *tok, IrcUser &user)
 {
 	std::string		command = tok->getCommand();
 	user.getFd();
-	if (command.compare("NICK") == 0) {nickname(tok, user, *this); std::cout << "executing NICK" << std::endl; return ;}
-	if (command.compare("PRIVMSG") == 0) {prvmsg(tok, user); std::cout << "executing PRIVMSG" << std::endl; return ;}
+	if (command.compare("NICK") == 0) {nickname(tok, user, *this); return ;}
+	if (command.compare("PRIVMSG") == 0) {prvmsg(tok, user); return ;}
 	if (command.compare("PING") == 0) {pong(tok, user); return ;}
-	if (command.compare("PASS") == 0) {pass(tok, user); std::cout << "executing PASS" << std::endl; return ;}
-	if (command.compare("USER") == 0) {user_cmd(tok, user); std::cout << "executing USER" << std::endl; return ;}
-	if (command.compare("JOIN") == 0) {join(tok, user); std::cout << "executing JOIN" << std::endl; return ;}
-	if (command.compare("KICK") == 0) {kick(tok, user); std::cout << "executing KICK" << std::endl; return ;}
-	if (command.compare("INVITE") == 0) {invite(tok, user); std::cout << "executing INVITE" << std::endl; return ;}
-	if (command.compare("TOPIC") == 0) {topic(tok, user); std::cout << "executing TOPIC" << std::endl; return ;}
-	if (command.compare("MODE") == 0) {mode(tok, user); std::cout << "executing MODE" << std::endl; return ;}
-	if (command.compare("OPER") == 0) {oper(tok, user); std::cout << "executing OPER" << std::endl; return ;}
-	std::cout << "ignoring command " << command << std::endl << std::endl;
+	if (command.compare("PASS") == 0) {pass(tok, user); return ;}
+	if (command.compare("USER") == 0) {user_cmd(tok, user); return ;}
+	if (command.compare("JOIN") == 0) {join(tok, user); return ;}
+	if (command.compare("KICK") == 0) {kick(tok, user); return ;}
+	if (command.compare("INVITE") == 0) {invite(tok, user); return ;}
+	if (command.compare("TOPIC") == 0) {topic(tok, user); return ;}
+	if (command.compare("MODE") == 0) {mode(tok, user); return ;}
+	if (command.compare("OPER") == 0) {oper(tok, user); return ;}
+	if (command.compare("QUIT") == 0) {quit(tok, user); return ;}
 	return ;
 }
 

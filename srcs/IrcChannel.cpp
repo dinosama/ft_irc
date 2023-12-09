@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:52:56 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 17:31:17 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 21:05:16 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,4 +170,9 @@ std::string             IrcChannel::getPwd()
 void                    IrcChannel::setPwd(std::string p)
 {
     pwd = p;
+}
+
+IrcUser					IrcChannel::getCreator()
+{
+	return (creator);
 }

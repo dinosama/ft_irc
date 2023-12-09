@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 04:50:37 by motaouss          #+#    #+#             */
-/*   Updated: 2023/12/09 07:39:44 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 19:45:31 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@
 #define ERR_USERSDONTMATCH(client) ("502 " + client + " :Cant change mode for other users\r\n")
 #define RPL_UMODEIS(client, mode) (":localhost 221 " + client + " " + mode + "\r\n")
 /* channel mode */
+#define ERR_INVITEONLYCHAN(client, channel) ("473 " + client + " " + channel + " :Cannot join channel (+i)\r\n")
 #define MODE_CHANNELMSG(channel, mode) (":localhost MODE " + channel + " " + mode + "\r\n")
 #define MODE_CHANNELMSGWITHPARAM(channel, mode, param) (":localhost MODE " + channel + " " + mode + " " + param + "\r\n")
 #define RPL_CHANNELMODEIS(client, channel, mode) (":localhost 324 " + client + " " + channel + " " + mode + "\r\n")

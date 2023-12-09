@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:39:52 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 15:11:57 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 21:04:48 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ class IrcChannel
         std::string     getTopic();
         void            setTopic(std::string str);
         void            setPwd(std::string p);
+		int				max_user();
+		IrcUser			getCreator();
 };
 
 #endif
