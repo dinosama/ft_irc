@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 15:58:39 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 17:17:20 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void	IrcServ::exec(Token *tok, IrcUser &user)
 	user.getFd();
 	if (command.compare("NICK") == 0) {nickname(tok, user, *this); std::cout << "executing NICK" << std::endl; return ;}
 	if (command.compare("PRIVMSG") == 0) {prvmsg(tok, user); std::cout << "executing PRIVMSG" << std::endl; return ;}
-	if (command.compare("PING") == 0) {pong(tok, user); std::cout << "executing PONG" << std::endl; return ;}
+	if (command.compare("PING") == 0) {pong(tok, user); return ;}
 	if (command.compare("PASS") == 0) {pass(tok, user); std::cout << "executing PASS" << std::endl; return ;}
 	if (command.compare("USER") == 0) {user_cmd(tok, user); std::cout << "executing USER" << std::endl; return ;}
 	if (command.compare("JOIN") == 0) {join(tok, user); std::cout << "executing JOIN" << std::endl; return ;}
@@ -196,7 +196,7 @@ int		IrcServ::run()
 				}
 				else
 				{
-					std::cout << "receive something on socket " << pfds[i].fd << " users length " << users.size() << std::endl;
+					std::cout << "receive something on socket " << pfds[i].fd << std::endl;
 					memset(buf, 0, 512);
 					nbytes = recv(pfds[i].fd, buf, bufsize, 0);
 					if (nbytes < 0)

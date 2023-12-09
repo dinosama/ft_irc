@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:52:56 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 14:41:39 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 17:31:17 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,10 +128,11 @@ std::string             IrcChannel::getList()
 {
     std::string     dest;
 
+	dest = "";
     for (std::vector<IrcUser>::iterator it = users.begin(); it < users.end(); it++)
     {
         if (creator.getNick() == (*it).getNick())
-            dest += '~';
+            dest += '@';
         else if (is_ops((*it).getNick()))
             dest += '@';
         dest += (*it).getNick();

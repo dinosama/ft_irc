@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 00:34:20 by motaouss          #+#    #+#             */
-/*   Updated: 2023/12/09 16:32:43 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 17:44:30 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,13 @@ void	send_one(std::string msg, IrcUser &user)
 
 void	IrcServ::send_channel(std::string msg, IrcChannel &channel, IrcUser *nothim)
 {
+	std::string paslui;
+	if (nothim != NULL)
+		paslui = nothim->getNick();
 	for (std::vector<IrcUser>::iterator it = channel.getUsers()->begin(); it < channel.getUsers()->end(); it++)
 	{
-		if (nothim != NULL && nothim->getNick() != (*it).getNick())
+		if (paslui != (*it).getNick())
 		{
-			std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAA" << is_user((*it).getNick())->getNick() << std::endl;
 			IrcUser *user = is_user((*it).getNick());
 			if (user->getList())
 				user->getList()->push_back(msg);
@@ -101,7 +103,10 @@ IrcChannel	*IrcServ::is_channel(std::string channel){
 	IrcChannel *tmp = NULL;
 	for (std::vector<IrcChannel>::iterator it = channels.begin(); it != channels.end(); ++it){
 		if (it->getTitle() == channel)
+		{
+			std::cout << "gettitle : " << it->getTitle() << "|||  channel :  " << channel << " || adresse : "<< &(*it) << std::endl;
 			tmp = &(*it);
+		}
 	}
 	return (tmp);
 }
@@ -147,7 +152,7 @@ void 	IrcServ::kick(Token *t, IrcUser &user){
 		send_one(ERR_NOTONCHANNEL(user.getNick(), (*t->getParam())[0]), user);
 	else
 	{
-		send_channel(RPL_KICK(user_id(user.getNick(), user.getName()), (*t->getParam())[0], (*t->getParam())[1], reason), *is_channel((*t->getParam())[0]), &user);
+		send_channel(RPL_KICK(user_id(user.getNick(), user.getName()), (*t->getParam())[0], (*t->getParam())[1], reason), *is_channel((*t->getParam())[0]), NULL);
 		is_channel((*t->getParam())[0])->deleteUser(is_user((*t->getParam())[1])->getFd());
 		is_channel((*t->getParam())[0])->deleteOP(is_user((*t->getParam())[1])->getFd());
 	}
@@ -241,6 +246,8 @@ void	IrcServ::join(Token *t, IrcUser &user)
 		send_one(RPL_NAMREPLY(user.getNick(), is_channel((*t->getParam())[0])->getSymbol(), (*t->getParam())[0], is_channel((*t->getParam())[0])->getList()), user);
 		send_one(RPL_ENDOFNAMES(user.getNick(), (*t->getParam())[0]), user);
 	}
+	else if (is_channel((*t->getParam())[0])->is_user(user.getNick()))
+		return ;
 	else if (is_channel((*t->getParam())[0])->getPwd() != "")
 	{
 		if (t->getNparam() < 2 || (*t->getParam())[1] != is_channel((*t->getParam())[0])->getPwd())
@@ -248,7 +255,7 @@ void	IrcServ::join(Token *t, IrcUser &user)
 	}
 	else
 	{
-		send_channel(RPL_JOIN(user.getNick(), (*t->getParam())[0]), *is_channel((*t->getParam())[0]), &user);
+		send_channel(RPL_JOIN(user_id(user.getNick(), user.getName()), (*t->getParam())[0]), *is_channel((*t->getParam())[0]), &user);
 		if (is_channel((*t->getParam())[0])->getTopic() != "")
 			send_one(RPL_TOPIC(user.getNick(), (*t->getParam())[0], is_channel((*t->getParam())[0])->getTopic()), user);
 		is_channel((*t->getParam())[0])->addUser(user);
