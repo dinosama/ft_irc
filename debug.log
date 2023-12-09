@@ -4,23 +4,38 @@
 << USER dino dino localhost :dino
 >> :localhost 433 dino dino :Nickname is already in use.
 << NICK dino_
->> :localhost 001  :Welcome to the Internet Relay Network :!dino@localhost
-<< MODE Welcome to the Internet Relay Network :!dino@localhost +i
-<< WHOIS dino
->> :localhost 002  :Your host is ft_ircnul (localhost), running version 2.8
->> :localhost 004  localhost 2.8 io koitl ko
->> :localhost 005  CHANNELLEN=32 NICKLEN=9 TOPICLEN=307 :are supported by this server
 >> :!dino@localhost NICK dino_
->> 401 dino_ Welcome :No such nick/channel
+>> :localhost 001 dino_ :Welcome to the Internet Relay Network :dino_!dino@localhost
+<< MODE dino_ +i
+<< WHOIS dino
+>> :localhost 002 dino_ :Your host is ft_ircnul (localhost), running version 2.8
+>> :localhost 004 dino_ localhost 2.8 io koitl ko
+>> :localhost 005 dino_ CHANNELLEN=32 NICKLEN=9 TOPICLEN=307 :are supported by this server
+>> :dino_ MODE dino_ :+i
 << PING localhost
 >> :dino_!dino@localhost PONG localhost
 --> lag pong
-<< JOIN #bat4
->> dino_ JOIN :#bat4
->> :localhost 353 dino_ � #bat4 :dino dino dino_
->> :localhost 366 dino_ #bat4 :End of /NAMES list.
-<< MODE #bat4
+<< JOIN #mdr
+>> :localhost 353 dino_ = #mdr :~dino_
+>> :localhost 366 dino_ #mdr :End of /NAMES list.
+<< MODE #mdr
+>> dino JOIN :#mdr
+>> :dino!dino@localhost PRIVMSG #mdr coucou
+>> :dino!dino@localhost PRIVMSG #mdr youpi
+>> :dino!dino@localhost PRIVMSG #mdr mDR
+<< PRIVMSG #mdr :calut
+>> :dino!dino@localhost PRIVMSG #mdr salut
 << PING localhost
 >> :dino_!dino@localhost PONG localhost
 --> FAILED whois
+--> lag pong
+<< PRIVMSG #mdr :ça va
+>> :dino!dino@localhost PRIVMSG #mdr ça va et toi
+<< PRIVMSG #mdr :tranquille
+<< MODE #mdr +i
+>> :localhost MODE #mdr +i
+<< PING localhost
+>> :dino_!dino@localhost PONG localhost
+--> FAILED mode channel: chanquery abort
+<< MODE #mdr
 --> lag pong

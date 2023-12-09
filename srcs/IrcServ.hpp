@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:27 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 07:52:02 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 09:54:47 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ class IrcServ
         void	    mode(Token *t, IrcUser &user);
         void	    pass(Token *t, IrcUser &user);
         void        oper(Token *t, IrcUser &user);
+        void	    send_channel(std::string msg, IrcChannel &channel, IrcUser *nothim);
 };
 
 #endif

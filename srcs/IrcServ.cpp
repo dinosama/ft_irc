@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 07:27:17 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 09:44:57 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	IrcServ::delete_user(int userfd)
 			pfds.erase(pfds.begin() + i);
 			nick = (*(users.begin() + i)).getNick();
 			users.erase(users.begin() + i);
+			close(userfd);
 			return ;
 		}
 	}
@@ -230,6 +231,7 @@ int		IrcServ::run()
 			{
 				for (std::vector<std::string>::iterator it = users[i].getList()->begin(); it < users[i].getList()->end(); it++)
 				{
+					std::cout << users[i].getNick() << " msg: " << (*it) << std::endl;
 					if (send(users[i].getFd(), (*it).c_str(), (*it).size(), 0) == -1)
 						std::cerr << "error: send" << std::endl;
 				}

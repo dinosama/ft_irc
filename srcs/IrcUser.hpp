@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:01:30 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 06:54:33 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 09:21:12 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ class IrcUser
 		void		setNick(std::string nick);
 		void		setName(std::string name);
 		void		setReal(std::string real);
-		void		setReg(int reg);
+		void		setRegplus();
 		std::string			getFdstr();
 		std::vector<std::string>	*getList();
 		bool			getinv();

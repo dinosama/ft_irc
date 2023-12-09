@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 00:34:20 by motaouss          #+#    #+#             */
-/*   Updated: 2023/12/09 07:52:15 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 09:59:26 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,16 @@ void	send_one(std::string msg, IrcUser &user)
 	user.getList()->push_back(msg);
 }
 
-void	send_channel(std::string msg, IrcChannel &channel)
+void	IrcServ::send_channel(std::string msg, IrcChannel &channel, IrcUser *nothim)
 {
 	for (std::vector<IrcUser>::iterator it = channel.getUsers()->begin(); it < channel.getUsers()->end(); it++)
-		(*it).getList()->push_back(msg);
+	{
+		if (nothim == NULL || nothim->getNick() != (*it).getNick())
+		{
+			IrcUser *user = is_user((*it).getNick());
+			user->getList()->push_back(msg);
+		}
+	}
 }
 
 void	send_all(std::string msg, std::vector<IrcUser> &users)
@@ -75,8 +81,17 @@ void		IrcServ::nickname(Token *t, IrcUser &user, IrcServ &serv){
 		send_one(ERR_NICKNAMEINUSE((*t->getParam())[0], (*t->getParam())[0]), user);
 	else
 	{
+		if (user.getNick() == "")
+			user.setRegplus();
 		user.setNick((*t->getParam())[0]);
 		send_one(RPL_NICK(oldnick, user.getName(), (*t->getParam())[0]), user);
+		if (user.getReg() == 2)
+		{
+			send_one(RPL_WELCOME(user_id(user.getNick(), user.getName()), user.getNick()), user);
+			send_one(RPL_YOURHOST(user.getNick(), "ft_ircnul", "2.8"), user);
+			send_one(RPL_MYINFO(user.getNick(), "localhost", "2.8", "io", "koitl", "ko"), user);
+			send_one(RPL_ISUPPORT(user.getNick(), "CHANNELLEN=32 NICKLEN=9 TOPICLEN=307"), user);
+		}
 	}
 }
 
@@ -90,11 +105,12 @@ IrcChannel	*IrcServ::is_channel(std::string channel){
 }
 
 int		IrcChannel::is_ops(std::string nick){
-	for (std::vector<IrcUser>::iterator it = ops.begin(); it != ops.end(); ++it){
+	for (std::vector<IrcUser>::iterator it = ops.begin(); it < ops.end(); it++)
+	{
 		if (it->getNick() == nick)
-			return (0);
+			return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	IrcChannel::is_user(std::string user){
@@ -146,7 +162,7 @@ void 	IrcServ::kick(Token *t, IrcUser &user){
 		send_one(ERR_NOTONCHANNEL(user.getNick(), (*t->getParam())[0]), user);
 	else
 	{
-		send_channel(RPL_KICK(user_id(user.getNick(), user.getName()), (*t->getParam())[0], (*t->getParam())[1], reason), *is_channel((*t->getParam())[0]));
+		send_channel(RPL_KICK(user_id(user.getNick(), user.getName()), (*t->getParam())[0], (*t->getParam())[1], reason), *is_channel((*t->getParam())[0]), NULL);
 		delete_user(find_userfd((*t->getParam())[1]));
 	}
 }
@@ -162,55 +178,22 @@ void	IrcServ::user_cmd(Token *t, IrcUser &user){
 	{
 		user.setName((*t->getParam())[0]);
 		user.setReal((*t->getParam())[3]);
-		user.setReg(1);
-		send_one(RPL_WELCOME(user_id(user.getNick(), user.getName()), user.getNick()), user);
-		send_one(RPL_YOURHOST(user.getNick(), "ft_ircnul", "2.8"), user);
-		send_one(RPL_MYINFO(user.getNick(), "localhost", "2.8", "io", "koitl", "ko"), user);
-		send_one(RPL_ISUPPORT(user.getNick(), "CHANNELLEN=32 NICKLEN=9 TOPICLEN=307"), user);
+		user.setRegplus();
+		if (user.getReg() == 2)
+		{
+			send_one(RPL_WELCOME(user_id(user.getNick(), user.getName()), user.getNick()), user);
+			send_one(RPL_YOURHOST(user.getNick(), "ft_ircnul", "2.8"), user);
+			send_one(RPL_MYINFO(user.getNick(), "localhost", "2.8", "io", "koitl", "ko"), user);
+			send_one(RPL_ISUPPORT(user.getNick(), "CHANNELLEN=32 NICKLEN=9 TOPICLEN=307"), user);
+		}
 	}
 }
-
-
-void	IrcServ::invite(Token *t, IrcUser &user){
-	if (t->getNparam() < 2)
-		send_one(ERR_NEEDMOREPARAMS(user.getNick(), t->getCommand()), user);
-	else if (is_channel((*t->getParam())[1]) == NULL)
-		send_one(ERR_NOSUCHCHANNEL(user.getNick(), (*t->getParam())[1]), user);
-	else if (is_channel((*t->getParam())[1])->is_user(user.getNick()))
-		send_one(ERR_NOTONCHANNEL(user.getNick(), (*t->getParam())[1]), user);
-	else if (is_channel((*t->getParam())[1])->is_ops(user.getNick()))
-		send_one(ERR_CHANOPRIVSNEEDED(user.getNick(), (*t->getParam())[1]), user);
-	else if (is_channel((*t->getParam())[1])->is_user((*t->getParam())[0]))
-		send_one(ERR_USERONCHANNEL(user.getNick(), (*t->getParam())[0], (*t->getParam())[1]), user);
-	else{
-		//prout caca caca prout
-	}
-}
-
-
-void	IrcServ::topic(Token *t, IrcUser &user){
-	if (t->getNparam() < 1)
-		send_one(ERR_NEEDMOREPARAMS(user.getNick(), t->getCommand()), user);
-	else if (is_channel((*t->getParam())[0]) == NULL)
-		send_one(ERR_NOSUCHCHANNEL(user.getNick(), (*t->getParam())[0]), user);
-	else if (is_channel((*t->getParam())[0])->is_user(user.getNick()))
-		send_one(ERR_NOTONCHANNEL(user.getNick(), (*t->getParam())[0]), user);
-	else if (is_channel((*t->getParam())[0])->is_ops(user.getNick()))
-		send_one(ERR_CHANOPRIVSNEEDED(user.getNick(), (*t->getParam())[0]), user);
-	else{
-		if (t->getNparam() >= 2)
-			send_one(RPL_NOTOPIC(user.getNick(), (*t->getParam())[0]), user);
-		else if (is_channel((*t->getParam())[1]) == NULL)
-			send_channel(RPL_TOPIC(user.getNick(), (*t->getParam())[0], (*t->getParam())[1] ), *is_channel((*t->getParam())[0]));
-	}
-}
-
 
 void	IrcServ::prvmsg(Token *t, IrcUser &user)
 {
 	bool	channel = 0;
 
-	if (t->getNparam() < 1 && (*t->getParam())[0][0] == '#')
+	if (t->getNparam() > 0 && (*t->getParam())[0][0] == '#')
 		channel = 1;
 	if (user.getReg() == 0)
 		send_one(ERR_NOTREGISTERED(user.getNick()), user);
@@ -223,7 +206,10 @@ void	IrcServ::prvmsg(Token *t, IrcUser &user)
 	else if (!channel && is_user((*t->getParam())[0]) == NULL)
 		send_one(ERR_NOSUCHNICK(user.getNick(), (*t->getParam())[0]), user);
 	else if (channel)
-		send_channel(RPL_PRIVMSG(user.getNick(), user.getName(), (*t->getParam())[0], (*t->getParam())[1]), *is_channel((*t->getParam())[0]));
+	{
+		std::cout << "CHANNELLLLL: " << channel << std::endl;
+		send_channel(RPL_PRIVMSG(user.getNick(), user.getName(), (*t->getParam())[0], (*t->getParam())[1]), *is_channel((*t->getParam())[0]), &user);
+	}
 	else if (!channel)
 		send_one(RPL_PRIVMSG(user.getNick(), user.getName(), (*t->getParam())[0], (*t->getParam())[1]), *is_user((*t->getParam())[0]));
 }
@@ -261,23 +247,23 @@ void	IrcServ::join(Token *t, IrcUser &user)
 {
 	if (user.getReg() == 0)
 		send_one(ERR_NOTREGISTERED(user.getNick()), user);
-	if (t->getNparam() < 1)
+	else if (t->getNparam() < 1)
 		send_one(ERR_NEEDMOREPARAMS(user.getNick(), t->getCommand()), user);
-	if (is_channel((*t->getParam())[0]) == NULL)
+	else if (is_channel((*t->getParam())[0]) == NULL)
 	{
 		add_channel((*t->getParam())[0], user);
-		send_one(RPL_JOIN(user_id(user.getNick(), user.getName()), (*t->getParam())[0]), user);
+		//send_one(RPL_JOIN(user_id(user.getNick(), user.getName()), (*t->getParam())[0]), user);
 		send_one(RPL_NAMREPLY(user.getNick(), is_channel((*t->getParam())[0])->getSymbol(), (*t->getParam())[0], is_channel((*t->getParam())[0])->getList()), user);
 		send_one(RPL_ENDOFNAMES(user.getNick(), (*t->getParam())[0]), user);
 	}
-	if (is_channel((*t->getParam())[0])->getPwd() != "")
+	else if (is_channel((*t->getParam())[0])->getPwd() != "")
 	{
 		if (t->getNparam() < 2 || (*t->getParam())[1] != is_channel((*t->getParam())[0])->getPwd())
 			send_one(ERR_BADCHANNELKEY(user.getNick(), (*t->getParam())[0]), user);
 	}
 	else
 	{
-		send_one(RPL_JOIN(user.getNick(), (*t->getParam())[0]), user);
+		send_channel(RPL_JOIN(user.getNick(), (*t->getParam())[0]), *is_channel((*t->getParam())[0]), &user);
 		if (is_channel((*t->getParam())[0])->getTopic() != "")
 			send_one(RPL_TOPIC(user.getNick(), (*t->getParam())[0], is_channel((*t->getParam())[0])->getTopic()), user);
 		is_channel((*t->getParam())[0])->addUser(user);
@@ -308,7 +294,7 @@ void	IrcServ::topic(Token *t, IrcUser &user)
 		else
 		{
 			is_channel((*t->getParam())[0])->setTopic((*t->getParam())[1]);
-			send_channel(RPL_TOPIC(user.getNick(), (*t->getParam())[0], is_channel((*t->getParam())[0])->getTopic()), *is_channel((*t->getParam())[0]));
+			send_channel(RPL_TOPIC(user.getNick(), (*t->getParam())[0], is_channel((*t->getParam())[0])->getTopic()), *is_channel((*t->getParam())[0]), NULL);
 		}
 	}
 }
@@ -379,6 +365,7 @@ void	IrcServ::mode(Token *t, IrcUser &user)
 				if (*it == 'i')
 				{
 					mode += 'i';
+					chan->setSymbol('*');
 					chan->setInvite(1);
 				}
 				if (*it == 't')
@@ -419,12 +406,13 @@ void	IrcServ::mode(Token *t, IrcUser &user)
 				if (*it == 'i')
 				{
 					mode += 'i';
-					chan->setInvite(1);
+					chan->setSymbol('=');
+					chan->setInvite(0);
 				}
 				if (*it == 't')
 				{
 					mode += 't';
-					chan->setTopicPerm(1);
+					chan->setTopicPerm(0);
 				}
 				if (*it == 'k')
 				{
@@ -452,7 +440,7 @@ void	IrcServ::mode(Token *t, IrcUser &user)
 			}
 		}
 		mode = mode + parameters;
-		send_channel(MODE_CHANNELMSG((*t->getParam())[0], mode), *chan);
+		send_channel(MODE_CHANNELMSG((*t->getParam())[0], mode), *chan, NULL);
 	}
 }
 

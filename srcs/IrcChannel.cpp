@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:52:56 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 06:15:30 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 08:44:04 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ IrcChannel::IrcChannel(std::string title, IrcUser user) : title(title), creator(
     max_users = 0;
     topicperm = 0;
     invite = 0;
+    symbol = '=';
 }
 
 IrcChannel::~IrcChannel() {}
@@ -35,7 +36,6 @@ std::string     IrcChannel::getTitle() const
 
 void            IrcChannel::addUser(IrcUser user)
 {
-    ops.push_back(user);
     users.push_back(user);
 }
 
@@ -113,10 +113,12 @@ std::string             IrcChannel::getList()
 
     for (std::vector<IrcUser>::iterator it = users.begin(); it < users.end(); it++)
     {
-        if (is_ops((*it).getNick()))
+        if (creator.getNick() == (*it).getNick())
+            dest += '~';
+        else if (is_ops((*it).getNick()))
             dest += '@';
         dest += (*it).getNick();
-        if (it + 1 != users.end())
+        if (it + 1 < users.end())
             dest += ' ';
     }
     return dest;

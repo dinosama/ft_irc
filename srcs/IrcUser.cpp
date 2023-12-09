@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:24:17 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 06:55:03 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 09:21:26 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,9 @@ void	IrcUser::setReal(std::string real)
 	this->real_name = real;
 }
 
-void	IrcUser::setReg(int reg)
+void	IrcUser::setRegplus()
 {
-	registered = reg;
+	registered++;
 }
 
 int		IrcUser::getReg()
