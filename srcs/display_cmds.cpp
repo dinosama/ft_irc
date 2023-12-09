@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 00:34:20 by motaouss          #+#    #+#             */
-/*   Updated: 2023/12/09 09:59:26 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 14:40:16 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,23 +102,6 @@ IrcChannel	*IrcServ::is_channel(std::string channel){
 			tmp = &(*it);
 	}
 	return (tmp);
-}
-
-int		IrcChannel::is_ops(std::string nick){
-	for (std::vector<IrcUser>::iterator it = ops.begin(); it < ops.end(); it++)
-	{
-		if (it->getNick() == nick)
-			return (1);
-	}
-	return (0);
-}
-
-int	IrcChannel::is_user(std::string user){
-	for (std::vector<IrcUser>::iterator it = users.begin(); it != users.end(); ++it){
-		if (it->getNick() == user)
-			return (0);
-	}
-	return (1);
 }
 
 IrcUser		*IrcServ::is_user(std::string user)
@@ -252,7 +235,7 @@ void	IrcServ::join(Token *t, IrcUser &user)
 	else if (is_channel((*t->getParam())[0]) == NULL)
 	{
 		add_channel((*t->getParam())[0], user);
-		//send_one(RPL_JOIN(user_id(user.getNick(), user.getName()), (*t->getParam())[0]), user);
+		send_one(RPL_JOIN(user_id(user.getNick(), user.getName()), (*t->getParam())[0]), user);
 		send_one(RPL_NAMREPLY(user.getNick(), is_channel((*t->getParam())[0])->getSymbol(), (*t->getParam())[0], is_channel((*t->getParam())[0])->getList()), user);
 		send_one(RPL_ENDOFNAMES(user.getNick(), (*t->getParam())[0]), user);
 	}

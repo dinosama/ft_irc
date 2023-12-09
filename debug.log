@@ -1,41 +1,213 @@
+
 << CAP LS
 << PASS caca
-<< NICK dino
-<< USER dino dino localhost :dino
->> :localhost 433 dino dino :Nickname is already in use.
-<< NICK dino_
->> :!dino@localhost NICK dino_
->> :localhost 001 dino_ :Welcome to the Internet Relay Network :dino_!dino@localhost
-<< MODE dino_ +i
-<< WHOIS dino
->> :localhost 002 dino_ :Your host is ft_ircnul (localhost), running version 2.8
->> :localhost 004 dino_ localhost 2.8 io koitl ko
->> :localhost 005 dino_ CHANNELLEN=32 NICKLEN=9 TOPICLEN=307 :are supported by this server
->> :dino_ MODE dino_ :+i
+<< NICK jacob
+<< USER aaa aaa localhost :Aaron APATOUT
+>> :!@localhost NICK jacob
+>> :localhost 001 jacob :Welcome to the Internet Relay Network :jacob!aaa@localhost
+<< MODE jacob +i
+>> :localhost 002 jacob :Your host is ft_ircnul (localhost), running version 2.8
+>> :localhost 004 jacob localhost 2.8 io koitl ko
+>> :localhost 005 jacob CHANNELLEN=32 NICKLEN=9 TOPICLEN=307 :are supported by this server
+>> :jacob MODE jacob :+i
 << PING localhost
->> :dino_!dino@localhost PONG localhost
+>> :jacob!aaa@localhost PONG localhost
 --> lag pong
-<< JOIN #mdr
->> :localhost 353 dino_ = #mdr :~dino_
->> :localhost 366 dino_ #mdr :End of /NAMES list.
-<< MODE #mdr
->> dino JOIN :#mdr
->> :dino!dino@localhost PRIVMSG #mdr coucou
->> :dino!dino@localhost PRIVMSG #mdr youpi
->> :dino!dino@localhost PRIVMSG #mdr mDR
-<< PRIVMSG #mdr :calut
->> :dino!dino@localhost PRIVMSG #mdr salut
 << PING localhost
->> :dino_!dino@localhost PONG localhost
---> FAILED whois
+>> :jacob!aaa@localhost PONG localhost
 --> lag pong
-<< PRIVMSG #mdr :ça va
->> :dino!dino@localhost PRIVMSG #mdr ça va et toi
-<< PRIVMSG #mdr :tranquille
-<< MODE #mdr +i
->> :localhost MODE #mdr +i
+<< MODE jacob -i
+>> :jacob MODE jacob :-i
+--> requested usermode change
+>> :coolio!aaa@localhost PRIVMSG jacob hello
 << PING localhost
->> :dino_!dino@localhost PONG localhost
+>> :jacob!aaa@localhost PONG localhost
+--> lag pong
+<< CAP LS
+<< PASS caca
+<< NICK coolio
+<< USER aaa aaa localhost :Aaron APATOUT
+>> :!@localhost NICK coolio
+>> :localhost 001 coolio :Welcome to the Internet Relay Network :coolio!aaa@localhost
+<< MODE coolio +i
+>> :localhost 002 coolio :Your host is ft_ircnul (localhost), running version 2.8
+>> :localhost 004 coolio localhost 2.8 io koitl ko
+>> :localhost 005 coolio CHANNELLEN=32 NICKLEN=9 TOPICLEN=307 :are supported by this server
+>> :coolio MODE coolio :+i
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PRIVMSG jacob :hello
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+>> :jacob!aaa@localhost PRIVMSG coolio salut
+<< PRIVMSG jacob :mdrrrrrrrrrr
+>> :jacob!aaa@localhost PRIVMSG coolio jsuis yomb
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< JOIN #superchan
+>> :localhost 353 coolio = #superchan :~coolio
+>> :localhost 366 coolio #superchan :End of /NAMES list.
+<< MODE #superchan
+<< PRIVMSG #superchan :wshhhhhhhhhh
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< MODE #superchan +i
+>> :localhost MODE #superchan +i
+>> jacob JOIN :#superchan
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
 --> FAILED mode channel: chanquery abort
-<< MODE #mdr
+<< MODE #superchan
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> FAILED mode channel: chanquery abort
+<< WHO #superchan
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> FAILED who: chanquery abort
+<< WHO #superchan
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> FAILED who: chanquery abort
+<< MODE #superchan b
+--> lag pong
+>> :localhost MODE #superchan 
+>> :localhost MODE #superchan 
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> FAILED mode b: chanquery abort
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+>> :jacob!aaa@localhost PRIVMSG #superchan salut
+>> :jacob!aaa@localhost PRIVMSG #superchan mdr
+<< PRIVMSG #superchan :wsh
+<< PRIVMSG #superchan :ahah
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PRIVMSG jacob :coucou
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PRIVMSG jacob :tfq
+>> :jacob!aaa@localhost PRIVMSG coolio r et toi
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
+--> lag pong
+<< KICK #superchan jacob :
+>> :localhost 482 coolio #superchan :You're not channel operator
+>> :jacob!aaa@localhost PRIVMSG #superchan hello
+<< PING localhost
+>> :coolio!aaa@localhost PONG localhost
 --> lag pong

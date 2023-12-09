@@ -1,0 +1,2 @@
+? créé 2 users quand le client créé un serveur avec la cmd join
+apres avoir set invite only, les utilisateurs peuvent tjrs rejoindre
