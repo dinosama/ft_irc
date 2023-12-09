@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcServ.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:27 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/08 23:20:39 by motaouss         ###   ########.fr       */
+/*   Updated: 2023/12/09 07:52:02 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "Token.hpp"
 #include "IrcChannel.hpp"
 #include "algorithm"
+
 extern bool power;
 
 class IrcServ
@@ -43,17 +44,27 @@ class IrcServ
     public:
         IrcServ(std::string port, std::string pwd);
         ~IrcServ();
+        void        add_channel(std::string title, IrcUser user);
+        void        delete_channel(std::string title);
         void    	add_user(int userfd);
         void    	delete_user(int userfd);
         int     	run();
         void    	exec(Token *tok, IrcUser &user);
         int     	used_nickname(std::string str);
         IrcChannel	*is_channel(std::string channel);
+        IrcUser		*is_user(std::string user);
         void		kick(Token *t, IrcUser &user);
 		void		nickname(Token *t, IrcUser &user, IrcServ &serv);
 		int			find_userfd(std::string nick);
+        void	    prvmsg(Token *t, IrcUser &user);
+        void	    pong(Token *t, IrcUser &user);
+        void	    user_cmd(Token *t, IrcUser &user);
         void        invite(Token *t, IrcUser &user);
-        void        topic(Token *t, IrcUser &user);
+        void	    join(Token *t, IrcUser &user);
+        void	    topic(Token *t, IrcUser &user);
+        void	    mode(Token *t, IrcUser &user);
+        void	    pass(Token *t, IrcUser &user);
+        void        oper(Token *t, IrcUser &user);
 };
 
 #endif

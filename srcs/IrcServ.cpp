@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/07 05:01:10 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 07:27:17 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ int fd_is_valid(int fd)
 void	IrcServ::add_user(int userfd)
 {
 	struct pollfd pfd;
+	fcntl(userfd, F_SETFL, O_NONBLOCK);
 	pfd.fd = userfd;
-	pfd.events = POLLIN;
+	pfd.events = POLLIN | POLLOUT;
 	pfd.revents = 0;
 	users.push_back(IrcUser(userfd));
 	pfds.push_back(pfd);
@@ -29,14 +30,46 @@ void	IrcServ::add_user(int userfd)
 
 void	IrcServ::delete_user(int userfd)
 {
+	std::string nick;
 	for (int i = 0; i < (int)pfds.size(); i++)
 	{
 		if (pfds[i].fd == userfd)
 		{
 			pfds.erase(pfds.begin() + i);
+			nick = (*(users.begin() + i)).getNick();
 			users.erase(users.begin() + i);
 			return ;
 		}
+	}
+	for (std::vector<IrcChannel>::iterator it = channels.begin(); it < channels.end(); it++)
+	{
+		for (std::vector<IrcUser>::iterator it1 = (*it).getUsers()->begin(); it1 < (*it).getUsers()->end(); it1++)
+		{
+			if ((*it1).getNick() == nick)
+				(*it).getUsers()->erase(it1);
+		}
+		for (std::vector<IrcUser>::iterator it1 = (*it).getOps()->begin(); it1 < (*it).getOps()->end(); it1++)
+		{
+			if ((*it1).getNick() == nick)
+				(*it).getUsers()->erase(it1);
+		}
+	}
+}
+
+void	IrcServ::add_channel(std::string title, IrcUser user)
+{
+	IrcChannel		chan(title, user);
+
+	chan.addOp(user);
+	channels.push_back(chan);
+}
+
+void	IrcServ::delete_channel(std::string title)
+{
+	for (std::vector<IrcChannel>::iterator it = channels.begin(); it < channels.end(); it++)
+	{
+		if (title == (*it).getTitle())
+			channels.erase(it);
 	}
 }
 
@@ -75,11 +108,16 @@ IrcServ::IrcServ(std::string port, std::string pwd) : pwd(pwd)
 		}
 		break;
 	}
-
+	fcntl(this->sockfd, F_SETFL, O_NONBLOCK);
+	fcntl(sockfd, F_SETFL, O_NONBLOCK);
 	if (servinfo == NULL) {
 		error = 1;
 		std::cerr << "error: couldn't bind"<< std::endl;
 		close(sockfd);
+		return ;
+	}
+	if ((status = listen(sockfd, 10)) == -1) {
+		std::cerr << "error: listen " << errno << std::endl;
 		return ;
 	}
 	freeaddrinfo(addrlst);
@@ -111,13 +149,17 @@ void	IrcServ::exec(Token *tok, IrcUser &user)
 {
 	std::string		command = tok->getCommand();
 	user.getFd();
-	if (command.compare("NICK") == 0) {nickname(tok, user, *this); return ;}
-	if (command.compare("USER") == 0) {std::cout << "executing USER" << std::endl; return ;}
-	if (command.compare("JOIN") == 0) {std::cout << "executing JOIN" << std::endl; return ;}
-	if (command.compare("KICK") == 0) {std::cout << "executing KICK" << std::endl; return ;}
-	if (command.compare("INVITE") == 0) {std::cout << "executing INVITE" << std::endl; return ;}
-	if (command.compare("TOPIC") == 0) {std::cout << "executing TOPIC" << std::endl; return ;}
-	if (command.compare("MODE") == 0) {std::cout << "executing MODE" << std::endl; return ;}
+	if (command.compare("NICK") == 0) {nickname(tok, user, *this); std::cout << "executing NICK" << std::endl; return ;}
+	if (command.compare("PRIVMSG") == 0) {prvmsg(tok, user); std::cout << "executing PRIVMSG" << std::endl; return ;}
+	if (command.compare("PING") == 0) {pong(tok, user); std::cout << "executing PONG" << std::endl; return ;}
+	if (command.compare("PASS") == 0) {pass(tok, user); std::cout << "executing PASS" << std::endl; return ;}
+	if (command.compare("USER") == 0) {user_cmd(tok, user); std::cout << "executing USER" << std::endl; return ;}
+	if (command.compare("JOIN") == 0) {join(tok, user); std::cout << "executing JOIN" << std::endl; return ;}
+	if (command.compare("KICK") == 0) {kick(tok, user); std::cout << "executing KICK" << std::endl; return ;}
+	if (command.compare("INVITE") == 0) {invite(tok, user); std::cout << "executing INVITE" << std::endl; return ;}
+	if (command.compare("TOPIC") == 0) {topic(tok, user); std::cout << "executing TOPIC" << std::endl; return ;}
+	if (command.compare("MODE") == 0) {mode(tok, user); std::cout << "executing MODE" << std::endl; return ;}
+	if (command.compare("OPER") == 0) {oper(tok, user); std::cout << "executing OPER" << std::endl; return ;}
 	std::cout << "ignoring command " << command << std::endl << std::endl;
 	return ;
 }
@@ -130,30 +172,29 @@ int		IrcServ::run()
 	socklen_t 				addrlen = sizeof remoteaddr;
 	char					buf[512];
 	int						bufsize = sizeof buf;
-	Token					*tok;
 
 	newfd = -1;
-	if ((status = listen(sockfd, 10)) == -1) {
-		std::cerr << "error: listen " << errno << std::endl;
-		return (-1);
-	}
 	while (power) {
-		if ((status = poll(pfds.data(), users.size(), -1)) == -1) {
+		if ((status = poll(pfds.data(), users.size(), 0)) == -1) {
 			std::cerr << "error: poll " << status << std::endl;
 			return (-1);
 		}
 		for (int i = 0; i < (int)users.size(); i++) {
 			int nbytes;
-			if (pfds[i].revents & POLLIN) {
-				if (pfds[i].fd == sockfd) {
-					if ((newfd = accept(sockfd, (struct sockaddr *)&remoteaddr, &addrlen)) == -1) {
+			if (pfds[i].revents & POLLIN)
+			{
+				if (pfds[i].fd == sockfd)
+				{
+					if ((newfd = accept(sockfd, (struct sockaddr *)&remoteaddr, &addrlen)) == -1)
 						std::cerr << "error: accept" << std::endl;
-					} else {
+					else
+					{
 						add_user(newfd);
 						std::cerr << "server: new connection on socket " << newfd << std::endl;
 					}
-					std::cerr << "new fd is " << newfd << std::endl;
-				} else {
+				}
+				else
+				{
 					std::cout << "receive something on socket " << pfds[i].fd << " users length " << users.size() << std::endl;
 					memset(buf, 0, 512);
 					nbytes = recv(pfds[i].fd, buf, bufsize, 0);
@@ -175,16 +216,24 @@ int		IrcServ::run()
 						users[i].buffing(buf);
 						while (users[i].buftomsg())
 						{
-							tok = new Token(users[i].getMsg());
-							std::cout << "command: " << tok->getCommand() << std::endl;
-							for (int i = 0; i < (int)tok->getNparam(); i++)
-								std::cout << "parameter " << i + 1 << ": " << (*tok->getParam())[i] << std::endl;
-							exec(tok, users[i]);
+							Token tok(users[i].getMsg());
+							std::cout << "command: " << tok.getCommand() << std::endl;
+							for (int i = 0; i < (int)tok.getNparam(); i++)
+								std::cout << "parameter " << i + 1 << ": " << (*tok.getParam())[i] << std::endl;
 							std::cout << std::endl;
-							delete tok;
+							exec(&tok, users[i]);
 						}
 					}
 				}
+			}
+			else if (pfds[i].revents & POLLOUT)
+			{
+				for (std::vector<std::string>::iterator it = users[i].getList()->begin(); it < users[i].getList()->end(); it++)
+				{
+					if (send(users[i].getFd(), (*it).c_str(), (*it).size(), 0) == -1)
+						std::cerr << "error: send" << std::endl;
+				}
+				users[i].getList()->clear();
 			}
 		}
 	}

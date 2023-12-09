@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:52:56 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/06 23:38:24 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 06:15:30 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ IrcChannel::IrcChannel(std::string title, IrcUser user) : title(title), creator(
     ops.push_back(creator);
     users.push_back(creator);
     max_users = 0;
-    topic = 1;
+    topicperm = 0;
     invite = 0;
 }
 
@@ -89,12 +89,12 @@ bool            IrcChannel::getInvite() const
 
 void            IrcChannel::setTopicPerm(bool topic)
 {
-    this->topic = topic;
+    this->topicperm = topic;
 }
 
 bool            IrcChannel::getTopicPerm() const
 {
-    return (topic);
+    return (topicperm);
 }
 
 std::vector<IrcUser>	*IrcChannel::getUsers()
@@ -105,4 +105,49 @@ std::vector<IrcUser>	*IrcChannel::getUsers()
 std::vector<IrcUser>	*IrcChannel::getOps()
 {
 	return (&ops);
+}
+
+std::string             IrcChannel::getList()
+{
+    std::string     dest;
+
+    for (std::vector<IrcUser>::iterator it = users.begin(); it < users.end(); it++)
+    {
+        if (is_ops((*it).getNick()))
+            dest += '@';
+        dest += (*it).getNick();
+        if (it + 1 != users.end())
+            dest += ' ';
+    }
+    return dest;
+}
+
+char                    IrcChannel::getSymbol()
+{
+    return symbol;
+}
+
+void                    IrcChannel::setSymbol(char symb)
+{
+    symbol = symb;
+}
+
+std::string             IrcChannel::getTopic()
+{
+    return (topic);
+}
+
+void                    IrcChannel::setTopic(std::string str)
+{
+    topic = str;
+}
+
+std::string             IrcChannel::getPwd()
+{
+    return (pwd);
+}
+
+void                    IrcChannel::setPwd(std::string p)
+{
+    pwd = p;
 }

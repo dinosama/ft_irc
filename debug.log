@@ -1,12 +1,26 @@
 << CAP LS
-<< NICK aaapatou
-<< USER aaa aaa localhost :Aaron APATOUT
->> :!@localhost NICK aaapatou
-<< CAP LS
-<< NICK aaapatou
-<< USER aaa aaa localhost :Aaron APATOUT
->> :!@localhost NICK aaapatou
-<< CAP LS
-<< NICK aaapatou
-<< USER aaa aaa localhost :Aaron APATOUT
->> :!@localhost NICK aaapatou
+<< PASS caca
+<< NICK dino
+<< USER dino dino localhost :dino
+>> :localhost 433 dino dino :Nickname is already in use.
+<< NICK dino_
+>> :localhost 001  :Welcome to the Internet Relay Network :!dino@localhost
+<< MODE Welcome to the Internet Relay Network :!dino@localhost +i
+<< WHOIS dino
+>> :localhost 002  :Your host is ft_ircnul (localhost), running version 2.8
+>> :localhost 004  localhost 2.8 io koitl ko
+>> :localhost 005  CHANNELLEN=32 NICKLEN=9 TOPICLEN=307 :are supported by this server
+>> :!dino@localhost NICK dino_
+>> 401 dino_ Welcome :No such nick/channel
+<< PING localhost
+>> :dino_!dino@localhost PONG localhost
+--> lag pong
+<< JOIN #bat4
+>> dino_ JOIN :#bat4
+>> :localhost 353 dino_ Ð #bat4 :dino dino dino_
+>> :localhost 366 dino_ #bat4 :End of /NAMES list.
+<< MODE #bat4
+<< PING localhost
+>> :dino_!dino@localhost PONG localhost
+--> FAILED whois
+--> lag pong

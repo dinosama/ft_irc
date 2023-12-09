@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcChannel.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:39:52 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/06 23:37:30 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 06:14:48 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,22 @@
 #include <iostream>
 #include <vector>
 #include "IrcUser.hpp"
+#include <ctime>
 
 class IrcChannel
 {
     private:
         std::string             title;
+        std::string             topic;
 		std::string				pwd;
         std::vector<IrcUser>    users;
         std::vector<IrcUser>    ops;
         IrcUser                 creator;
+        std::tm                 time;
+        char                    symbol;
         int                     max_users;
         bool                    invite;
-        bool                    topic;
+        bool                    topicperm;
     public:
         IrcChannel(std::string title, IrcUser user);
         ~IrcChannel();
@@ -45,8 +49,15 @@ class IrcChannel
         bool            getTopicPerm() const;
         int             is_ops(std::string  nick);
         int             is_user(std::string user);
+        char            getSymbol();
+        void            setSymbol(char symb);
+        std::string     getList();
+        std::string     getPwd();
 		std::vector<IrcUser>	*getUsers();
 		std::vector<IrcUser>	*getOps();
+        std::string     getTopic();
+        void            setTopic(std::string str);
+        void            setPwd(std::string p);
 };
 
 #endif

@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   IrcUser.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: motaouss <motaouss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 11:24:17 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/07 03:18:05 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 06:55:03 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IrcUser.hpp"
 
 IrcUser::IrcUser(int userfd) : userfd(userfd) {
+    op = 0;
+    inv = 0;
 	registered = 0;
     clearMsg();
 	clearBuf();
@@ -118,12 +120,57 @@ int		IrcUser::getReg()
 	return (registered);
 }
 
-std::string IrcUser::getNick()
+std::string     ft_itoa(int nb)
 {
-	return (nick);
+    std::string dest;
+
+    if (nb > 9)
+    {
+        dest = ft_itoa(nb / 10);
+    }
+    dest += (nb % 10) + 48;
+    return dest;
 }
 
-std::string IrcUser::getName()
+std::string             IrcUser::getFdstr()
 {
-	return (name);
+    std::string str;
+
+    str = ft_itoa(userfd);
+    return (str);
+}
+
+std::vector<std::string>    *IrcUser::getList()
+{
+    return (&send_list);
+}
+
+bool     IrcUser::getop()
+{
+    return (op);
+}
+
+void    IrcUser::setop(bool n)
+{
+    op = n;
+}
+
+bool     IrcUser::getinv()
+{
+    return (inv);
+}
+
+void    IrcUser::setinv(bool n)
+{
+    inv = n;
+}
+
+std::string             IrcUser::getPwd()
+{
+    return (pwd);
+}
+
+void                    IrcUser::setPwd(std::string p)
+{
+    pwd = p;
 }
