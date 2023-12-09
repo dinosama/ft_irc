@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 00:34:20 by motaouss          #+#    #+#             */
-/*   Updated: 2023/12/09 14:40:16 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 16:32:43 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ void	IrcServ::send_channel(std::string msg, IrcChannel &channel, IrcUser *nothim
 {
 	for (std::vector<IrcUser>::iterator it = channel.getUsers()->begin(); it < channel.getUsers()->end(); it++)
 	{
-		if (nothim == NULL || nothim->getNick() != (*it).getNick())
+		if (nothim != NULL && nothim->getNick() != (*it).getNick())
 		{
+			std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAA" << is_user((*it).getNick())->getNick() << std::endl;
 			IrcUser *user = is_user((*it).getNick());
-			user->getList()->push_back(msg);
+			if (user->getList())
+				user->getList()->push_back(msg);
 		}
 	}
 }
@@ -137,16 +139,17 @@ void 	IrcServ::kick(Token *t, IrcUser &user){
 		send_one(ERR_NEEDMOREPARAMS(user.getNick(), t->getCommand()), user);
 	else if (is_channel((*t->getParam())[0]) == NULL)
 		send_one(ERR_NOSUCHCHANNEL(user.getNick(), (*t->getParam())[0]), user);
-	else if (is_channel((*t->getParam())[0])->is_ops(user.getNick()))
+	else if (!is_channel((*t->getParam())[0])->is_ops(user.getNick()))
 		send_one(ERR_CHANOPRIVSNEEDED(user.getNick(), (*t->getParam())[0]), user);
-	else if (is_channel((*t->getParam())[0])->is_user((*t->getParam())[1]))
+	else if (!is_channel((*t->getParam())[0])->is_user((*t->getParam())[1]))
 		send_one(ERR_USERNOTINCHANNEL(user.getNick(), (*t->getParam())[1], (*t->getParam())[0]), user);
-	else if (is_channel((*t->getParam())[0])->is_user(user.getNick()))
+	else if (!is_channel((*t->getParam())[0])->is_user(user.getNick()))
 		send_one(ERR_NOTONCHANNEL(user.getNick(), (*t->getParam())[0]), user);
 	else
 	{
-		send_channel(RPL_KICK(user_id(user.getNick(), user.getName()), (*t->getParam())[0], (*t->getParam())[1], reason), *is_channel((*t->getParam())[0]), NULL);
-		delete_user(find_userfd((*t->getParam())[1]));
+		send_channel(RPL_KICK(user_id(user.getNick(), user.getName()), (*t->getParam())[0], (*t->getParam())[1], reason), *is_channel((*t->getParam())[0]), &user);
+		is_channel((*t->getParam())[0])->deleteUser(is_user((*t->getParam())[1])->getFd());
+		is_channel((*t->getParam())[0])->deleteOP(is_user((*t->getParam())[1])->getFd());
 	}
 }
 
@@ -190,7 +193,6 @@ void	IrcServ::prvmsg(Token *t, IrcUser &user)
 		send_one(ERR_NOSUCHNICK(user.getNick(), (*t->getParam())[0]), user);
 	else if (channel)
 	{
-		std::cout << "CHANNELLLLL: " << channel << std::endl;
 		send_channel(RPL_PRIVMSG(user.getNick(), user.getName(), (*t->getParam())[0], (*t->getParam())[1]), *is_channel((*t->getParam())[0]), &user);
 	}
 	else if (!channel)

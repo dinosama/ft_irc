@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 04:48:31 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 09:44:57 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 15:58:39 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,15 @@ void	IrcServ::delete_user(int userfd)
 	}
 	for (std::vector<IrcChannel>::iterator it = channels.begin(); it < channels.end(); it++)
 	{
-		for (std::vector<IrcUser>::iterator it1 = (*it).getUsers()->begin(); it1 < (*it).getUsers()->end(); it1++)
+		for (std::vector<IrcUser>::iterator it1 = (*it).getUsers()->begin(); it1 < (*it).getUsers()->end(); ++it1)
 		{
 			if ((*it1).getNick() == nick)
 				(*it).getUsers()->erase(it1);
 		}
-		for (std::vector<IrcUser>::iterator it1 = (*it).getOps()->begin(); it1 < (*it).getOps()->end(); it1++)
+		for (std::vector<IrcUser>::iterator it2 = (*it).getOps()->begin(); it2 < (*it).getOps()->end(); ++it2)
 		{
-			if ((*it1).getNick() == nick)
-				(*it).getUsers()->erase(it1);
+			if ((*it2).getNick() == nick)
+				(*it).getUsers()->erase(it2);
 		}
 	}
 }

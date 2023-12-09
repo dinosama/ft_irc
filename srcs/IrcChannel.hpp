@@ -6,7 +6,7 @@
 /*   By: aaapatou <aaapatou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:39:52 by aaapatou          #+#    #+#             */
-/*   Updated: 2023/12/09 06:14:48 by aaapatou         ###   ########.fr       */
+/*   Updated: 2023/12/09 15:11:57 by aaapatou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ class IrcChannel
         std::vector<IrcUser>    users;
         std::vector<IrcUser>    ops;
         IrcUser                 creator;
-        std::tm                 time;
         char                    symbol;
         int                     max_users;
         bool                    invite;
